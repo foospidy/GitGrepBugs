@@ -1,0 +1,54 @@
+#!/bin/bash
+
+RULES=/tmp/gb.rules.tab
+NUM_RULES=0
+DIRECTORY=.
+RUN_PWD=`pwd`
+
+if [ ! -z $1 ]
+then
+        DIRECTORY=$1
+fi
+
+cd ${DIRECTORY}
+
+if [ -f ${RULES} ]
+then
+        rm ${RULES}
+fi
+
+wget -q --user-agent="GitGrepBugs v0.0.0" -O ${RULES} https://grepbugs.com/rules/tab
+
+find ${DIRECTORY} -type f -name "*.*" -prune | sed 's/.*\.//' | sort | uniq -c
+
+for LANG in `find . -type f -name "*.*" -prune | sed 's|.*\.||' | sort -u`
+do
+        skip=false
+
+        # in some cases we get an integer as the file extension, skip those.
+        if [[ ${LANG} =~ ^-?[0-9]+$ ]]
+        then
+                skip=true
+        fi
+
+        if [ "${skip}" = false ]
+        then
+                NUM_RULES=`cat ${RULES} | awk -F "\t" '{ print $1" "$4 }' | grep -i -P -e " ?${LANG}[^a-z0-9],?| ?${LANG},?$" | wc -l`
+
+                if [ "${NUM_RULES}" -gt "0" ]
+                then
+                        for id in `cat ${RULES} | awk -F "\t" '{ print $1" "$4 }' | grep -i -P -e " ?${LANG}[^a-z0-9],?| ?${LANG},?$" | awk '{ print $1 }'`
+                        do
+                                # get tags
+                                cat ${RULES} | grep -m 1 -P -e "^${id}\t" | awk -F "\t" '{ print "\n"$2 }'
+
+                                for regex in `cat ${RULES} | awk -F "\t" -v id=${id} '$1==id { print $5 }'`
+                                do
+                                        git grep --break --heading --line-number -P "${regex}" -- "*.${LANG}"
+                                done
+                        done
+                fi
+        fi
+done
+
+cd ${RUN_PWD}
