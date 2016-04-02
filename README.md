@@ -5,7 +5,7 @@ The goal of this script is to be able to scan git repos with GrepBugs (http://ww
 
 ### Usage
 
-Both examples assume the GitGrepBugs script is in your PATH.
+Examples below assume the GitGrepBugs script is in your PATH.
 
 Example 1:
 ```
