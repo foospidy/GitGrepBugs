@@ -1,7 +1,7 @@
 # GitGrepBugs
 Grep Bugs with Git
 
-The goal of this script is to be able to scan git repos with GrepBugs (http://www.grepbugs.com) rules and requiring little to no dependencies. Currently the only dependency is a `bash` shell and the `git` command.
+The goal of this script is to be able to scan git repos with GrepBugs (http://www.grepbugs.com) rules and requiring little to no dependencies. Currently the only dependency is a `bash` shell and the `git` command. Git has some really good search capability, you can find a good introduction here http://travisjeffery.com/b/2012/02/search-a-git-repo-like-a-ninja/
 
 ### Usage
 
