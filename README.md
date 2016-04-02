@@ -23,4 +23,5 @@ GitGrepBugs <project>
 ### Output
 
 Currently results are just printed to the console. You can redirect the output to a file, example:
+
 `GitGrepBugs <project> > results.txt`
